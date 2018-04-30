@@ -1,0 +1,29 @@
+.btnSeek {
+	cursor:pointer;
+    display:block;
+}	
+.btnSeek:active {
+    background-color: yellow;
+}
+.btnSeek:hover {
+    background-color: lightskyblue;
+}
+
+.mmocVideoTranscript {
+    overflow-y: scroll;
+    height:300px;
+}
+
+.video-responsive{
+    overflow:hidden;
+    padding-bottom:56.25%;
+    position:relative;
+    height:0;
+}
+.video-responsive iframe{
+    left:0;
+    top:0;
+    /*height:100%;*/
+    width:100%;
+    position:absolute;
+}
