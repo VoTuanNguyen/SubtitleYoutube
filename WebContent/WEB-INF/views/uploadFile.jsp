@@ -28,10 +28,10 @@
 			<form method="post"
 				action="${pageContext.request.contextPath}/uploadFile"
 				enctype="multipart/form-data">
-				<b><h4>Select video to upload(Please select the video
-						format as *.mp4 or *.MP4):</h4></b> <input id="video" type="file"
-					name="file" /> <br> <b><h4>Select sub-file to
-						upload(Please select the sub-file format as *.srt):</h4></b> <input
+				<strong><h4>Select video to upload(Please select the video
+						format as *.mp4 or *.MP4. Maximum allowed size: <1GB):</h4></strong> <input id="video" type="file"
+					name="file" /> <br> <strong><h4>Select sub-file to
+						upload(Please select the sub-file format as *.srt):</h4></strong> <input
 					id="sub" type="file" name="file" /> <br> <input id="submit"
 					type="submit" class="btn btn-primary" value="Upload to learn" />
 			</form>

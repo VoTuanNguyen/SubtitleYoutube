@@ -22,6 +22,8 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script type="text/javascript" src="./ckeditor/ckeditor.js">	
 </script>
+<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet">
+<script src="http://vjs.zencdn.net/4.12/video.js"></script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <meta name="google-signin-client_id"
 	content="548616172439-1qe4veddhcntj2faqct82hcr42fij3ag.apps.googleusercontent.com">
@@ -40,20 +42,15 @@
 		style="padding: 0px !important;; margin: 0px !important;">
 
 		<jsp:include page="_header_get.jsp"></jsp:include>
+		
 		<div class="ic-Layout-contentMain" style="margin-top: 70px; background-image: url('./images/background.jpg');">
 			<div class="content-box" id="top_area">
 				<div class="grid-row">
 					<div class="col-xs-6">
 						<div class="" style="position: relative; padding-bottom: 56.25%; /* 16:9 */ padding-top: 25px; height: 0;" id="youTubeVideo">
-							<video id="myVideo" width="620" height="400" controls> <source
-								src="" type="video/mp4"> <!-- <source src="mov_bbb.ogg" type="video/ogg">
-								Your browser does not support HTML5 video. -->
+							<video id="myVideo" class="video-js vjs-default-skin" controls width="620" height="570"> 
+								<source src="" type="video/mp4">
 							</video>
-						</div>
-						<div style="text-align: center; border-style: double"
-							class="hidden">
-							<p id="note" style="margin-top: 7px">Subtitle will be shown
-								here!</p>
 						</div>
 					</div>
 					<div class="col-xs-6" id="transcript">
@@ -202,6 +199,69 @@
 		vid.src = linkhost + namevideo;
 		var idvideo = namevideo;
 		var arrnote;
+		var clickvideo = false;
+		var video_status = false;// not playing
+		
+		//xử lý các phím mũi tên
+		$(document).keydown(function(e) {
+		    switch(e.which) {
+		    	case 32: //space
+		    		if(clickvideo && video_status){
+		    			vid.pause();//dừng video
+		    		}else if(clickvideo && !video_status){
+		    			vid.play();//chạy video
+		    		}
+		    	break;
+		        case 37: // left
+		        	if(vid.currentTime >=5 && clickvideo){
+			            vid.currentTime = vid.currentTime - 5;
+		        	}else if(clickvideo){
+		        		vid.currentTime = 0;
+		        	}
+		        break;
+		
+		        case 38: // up
+		        	if(clickvideo && vid.volume <= 0.95){
+		        		vid.volume = vid.volume + 0.05;
+		        	}else if(clickvideo){
+		        		vid.volume = 1;
+		        	}
+		        break;
+		
+		        case 39: // right
+		        	if(vid.currentTime <= (vid.duration -5) && clickvideo){
+			            vid.currentTime = vid.currentTime + 5;
+		        	}else if(clickvideo){
+		        		vid.currentTime = vid.duration;
+		        	}
+		        break;
+		
+		        case 40: // down
+		        	if(clickvideo && vid.volume >= 0.05){
+		        		vid.volume = vid.volume - 0.05;
+		        	}else if(clickvideo){
+		        		vid.volume = 0;
+		        	}
+		        break;
+		
+		        default: return; // exit this handler for other keys
+		    }
+		    e.preventDefault(); // prevent the default action (scroll / move caret)
+		});
+		
+		//bắt sự kiện click video
+		$(document).mouseup(function(e) 
+		{
+		    var container = $("#myVideo");
+		    // if the target of the click isn't the container nor a descendant of the container
+		    if (!container.is(e.target) && container.has(e.target).length === 0) 
+		    {
+		    	clickvideo = false;//chưa click vô video
+		    }else{
+		    	clickvideo = true;// đã click vô video
+		    }
+		});
+		
 		//tính thời gian
 		function makeTimeline(time) {
 			var string, time_array = [];
@@ -308,7 +368,7 @@
 				if (i >= captions.length) {
 					return -1;
 				}
-				return returnTimeline(captions[i].end_time);
+				return returnTimeline(captions[i].end_time) - returnTimeline(captions[i].start_time);
 			}
 			var getTimeIdFromTimestampIndex = function(i) {
 				var strTimestamp = "" + i;
@@ -381,8 +441,8 @@
 				//console.log(captions);
 				src = captions;
 				var srt_output = "";
-				srt_output += "<div><div style='text-align: center;'><div class='btnSeek fa fa-play btn btn-default' style=' height: 35px' id='btnSeek' data-seek='0'>Play(<strong>00:00:00</strong>)</div></div></div>";
-				for (var i = 0, il = captions.length; i < il; i++) {
+                srt_output += "<div style='height: 7px'></div>";
+                for (var i = 0, il = captions.length; i < il; i++) {
 					start = +getStartTimeFromCaption(i);
 
 					captionText = captions[i].text;
@@ -409,7 +469,7 @@
 								+ '</div>'
 								+ '</div>'
 								+ '<div class="col-sm-1">'
-								+ '<div><i class="fa fa-eye show btn" aria-hidden="true" id="show'+i+'" data-pos="'+i+'"></i></div>'
+								+ '<a><i class="fa fa-eye" aria-hidden="true" id="show" data-pos="'+i+'"></i></a>'
 								+ '</div>' + '</div>';
 					} else {
 						srt_output += '<div class="grid-row" style=" height: 45px">'
@@ -424,7 +484,7 @@
 								+ '</div>'
 								+ '</div>'
 								+ '<div class="col-sm-1">'
-								+ '<div><i class="fa fa-eye show btn" aria-hidden="true" id="show'+i+'" data-pos="'+i+'"></i></div>'
+								+ '<a><i class="fa fa-eye" aria-hidden="true" id="show" data-pos="'+i+'"></i></a>'
 								+ '</div>' + '</div>';
 					}
 				}
@@ -447,8 +507,7 @@
 							type : 'GET',
 							data : {},
 							success : function(response) {
-								//oTranscript.transcriptLoaded(JSON.parse(response));
-								//console.log(response);
+								//tiến hành convert từ định dạnh srt sang json từ respone trả về
 								var lines = response.split('\r\n');
 								var output = [];
 								var buffer = {
@@ -485,6 +544,7 @@
 						});
 			}
 			vid.onpause = function() {
+				video_status = false;
 				if (!captionsLoaded) {
 					return;
 				}
@@ -494,18 +554,23 @@
 			}
 			var tran = this;
 			vid.onplay = function() {
+				video_status = true;
 				if (!captionsLoaded) {
 					return;
 				}
 				console.log('Video is played!');
-// 				vid.ontimeupdate = function() {
-// 					currentTime = vid.currentTime * 2 - 2.5;
-// 					tran.highlightCaptionFromTimestamp(currentTime);
-// 				} 
-				intervalTimeOut =  setInterval(function(){
-					currentTime = vid.currentTime * 2 - 2.5;
+				/* vid.ontimeupdate = function() {
+					currentTime = vid.currentTime;
 					tran.highlightCaptionFromTimestamp(currentTime);
-				}, 3000);
+				} */
+				//when video play this request will send
+				currentTime = vid.currentTime;
+				tran.highlightCaptionFromTimestamp(currentTime);
+				//set every 1s send 1 request
+				intervalTimeOut =  setInterval(function(){
+					currentTime = vid.currentTime;
+					tran.highlightCaptionFromTimestamp(currentTime);
+				}, 1000);
 			}
 		}
 		
@@ -554,7 +619,7 @@
 		         	CKEDITOR.instances.editor1.setData("");
 		         }
 		     });
-		     $(document).on('click', '.show', function() {
+		     $(document).on('click', '#show', function() {
 		         var po = $(this).data('pos');
 		         $("#t"+po).popover('show');
 		         vid.pause();

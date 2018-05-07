@@ -47,13 +47,9 @@
 			<div class="content-box" id="top_area">
 				<div class="grid-row">
 					<div class="col-xs-6">
-						<div class="" style="margin-top: 15px" id="youTubeVideo">
+						<div class="" style="margin-top: 25px" id="youTubeVideo">
 							<iframe class="iframe" id="" src="" width="560" height="400"
 								allow="autoplay" allowfullscreen="true" __idm_id__="1016238081"></iframe>
-						</div>
-						<div style="text-align: center; border-style: double" class="hidden">
-							<p id="note" style="margin-top: 7px">Subtitle will be shown
-								here!</p>
 						</div>
 					</div>
 					<div class="col-xs-6" id="transcript">
@@ -436,7 +432,7 @@
                 captions = transcript.getElementsByTagName('text');
                 src = captions;
                 var srt_output="";
-                srt_output += "<div><div style='text-align: center;'><div class='btnSeek fa fa-play btn btn-default' style=' height: 35px' id='btnSeek' data-seek='0'>Play(<strong>00:00:00</strong>)</div></div></div>";
+                srt_output += "<div style='height: 7px'></div>";
                 for (var i = 0, il = captions.length; i < il; i++) {
                     start =+ getStartTimeFromCaption(i);
 
