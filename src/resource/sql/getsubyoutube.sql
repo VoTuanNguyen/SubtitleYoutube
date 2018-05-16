@@ -26,14 +26,15 @@ SET time_zone = "+00:00";
 -- Table structure for table `lesson`
 --
 CREATE Database getsubyoutube;
-user getsubyoutube;
+use getsubyoutube;
 
 CREATE TABLE `lesson` (
   `id` int(11) NOT NULL,
   `idvideo` varchar(100) COLLATE utf8mb4_vietnamese_ci NOT NULL,
   `emailuser` varchar(100) COLLATE utf8mb4_vietnamese_ci NOT NULL,
   `title` varchar(100) COLLATE utf8mb4_vietnamese_ci DEFAULT NULL,
-  `linkimg` varchar(200) COLLATE utf8mb4_vietnamese_ci DEFAULT NULL
+  `linkimg` varchar(200) COLLATE utf8mb4_vietnamese_ci DEFAULT NULL,
+  `namesub` varchar(100) COLLATE utf8mb4_vietnamese_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_vietnamese_ci;
 
 -- --------------------------------------------------------
